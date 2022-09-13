@@ -5,6 +5,7 @@ module.exports = {
   getUsers(req, res) {
     User.find()
       .populate({ path: 'friends', select: '-__v' })
+      .populate({ path: 'thoughts', select: '-__v' })
       .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
@@ -14,6 +15,7 @@ module.exports = {
     User.findOne({ _id: req.params.userId })
       .select('-__v')
       .populate({ path: 'friends', select: '-__v' })
+      .populate({ path: 'thoughts', select: '-__v' })
       .then(async (user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID' })
@@ -41,7 +43,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 
-  // Updates the user
+  // Updates a user
   updateUser(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
